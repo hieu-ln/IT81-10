@@ -1,4 +1,4 @@
-// BAI 4 - CHUONG 6
+// BAI 7 - CHUONG 6
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
@@ -15,10 +15,11 @@ void InitGraph()
 {
 	n = 0;
 }
+
 void inputGraphFromText()
 {
 	string line;
-	ifstream myfile("matrantrongso1.txt");
+	ifstream myfile("do_thi_1.txt");
 	if(myfile.is_open())
 	{
 		myfile >> n;
@@ -72,6 +73,7 @@ int T2[MAX];
 int wT[MAX];
 int nT=0; // so phan tu tap T
 
+// Prim & Kruskal
 int TonTai(int d, int D[], int nD)
 {
 	for(int i = 0; i < nD; i++)
@@ -80,6 +82,7 @@ int TonTai(int d, int D[], int nD)
 	return 0 ;
 }
 
+// begin Prim
 void XoaViTriE(int i)
 {
 	for(int j = i; j < nE; j++)
@@ -141,6 +144,62 @@ void prim(int s) // s la dinh bat dau
 		u=d2;
 	}
 }
+
+// end Prim
+
+// begin Kruskal
+void swap(int &a, int &b)
+{
+	int c = a;
+	a = b;
+	b = c;
+}
+
+void taoE()
+{
+	for (int i = 0; i < n; i++)
+		for (int j = 0; j < n; j++)
+			if (a[i][j] != 0)
+			{
+				E1[nE] = i;
+				E2[nE] = j;
+				wE[nE] = a[i][j];
+				a[i][j] = 0;
+				a[j][i] = 0;
+				nE++;
+			}
+}
+
+void sapXepE()
+{
+	for (int i = 0; i < nE - 1; i++)
+		for (int j = i + 1; j < nE; j++)
+			if (wE[i] > wE[j])
+			{
+				swap(wE[i], wE[j]);
+				swap(E1[i], E1[j]);
+				swap(E2[i], E2[j]);
+			}
+}
+
+void kruskal()
+{
+	for (int i = 0; i < nE; i++)
+	{
+		if (TonTai(E1[i], T1, nT) == 1 && TonTai(E2[i], T2, nT) == 1)
+			continue;
+		if (TonTai(E1[i], T2, nT) == 1 && TonTai(E2[i], T1, nT) == 1)
+			continue;
+		T1[nT] = E1[i];
+		T2[nT] = E2[i];
+		wT[nT] = wE[i];
+		nT++;
+		if (nT == n - 1)
+			break;
+	}
+}
+// end Kruskal
+
 void output(bool VertexName)
 {
 	int tong = 0;
@@ -165,7 +224,9 @@ int main()
 	cout << "\n3. Nhap MA TRAN KE" << endl;
 	cout << "\n4. Xuat MA TRAN KE" << endl;
 	cout << "\n5. Tim CAY KHUNG TOI THIEU bang PRIM " << endl ;
-	cout << "\n6. Thoat" << endl ;
+	cout << "\n6. Tim CAY KHUNG TOI THIEU bang KRUSKAL " << endl ;
+	cout << "\n7. Tim CAY KHUNG TOI THIEU bang KRUSKAL Cai Tien " << endl ;
+	cout << "\n8. Thoat" << endl ;
 	do{
 		cout << "\nVui long chon so de thuc hien: " ;
 		cin >> choice ;
@@ -184,6 +245,7 @@ int main()
 				inputGraph();
 				break;
 			case 4:
+				cout << endl;
 				outputGraph();
 				break;
 			case 5:
@@ -194,12 +256,26 @@ int main()
 				output(true);
 				break;
 			case 6:
+				taoE();
+				sapXepE();
+				kruskal();
+				cout << "\nCay khung toi tieu bang KRUSKAL " << endl;
+				output(true);
+				break;
+			case 7:
+				sapXepE();
+				taoE();
+				kruskal();
+				cout << "\nCay khung toi tieu bang KRUSKAL Cai Tien " << endl;
+				output(true);
+				break;
+			case 8:
 				cout << "\nGoodbye ...!!!!!\n";
-				break ;
+				break;
 			default:
 				cout << "\nChon sai. Chon lai !!!\n";
 				break ;
 		}
-	} while(choice != 6);
+	} while(choice != 8);
 	return 0 ;
 }
