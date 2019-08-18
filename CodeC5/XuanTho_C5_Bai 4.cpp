@@ -276,6 +276,9 @@ int main()
 				break;
 			case 7:
 				cout << "\nVui long nhap gia tri x can tim: "; cin >> x;
+				InintQueue();
+				InitC();
+				nbfs = 0;
 				searchByBFS(x, 0);
 				break;
 			case 8:
